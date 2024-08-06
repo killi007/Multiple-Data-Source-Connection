@@ -1,0 +1,24 @@
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://111.118.176.81:6000/adt_db
+#    username: appuser
+#    password: appuser@123
+#    driver-class-name: org.postgresql.Driver
+#    hikari:
+#      maximum-pool-size: 5
+#      minimum-idle: 2
+#      idle-timeout: 60000
+#  jpa:
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    generate-ddl: true
+#  main:
+#    allow-circular-references: true
+#
+#logging:
+#   file:
+#     name: /app/AuditService.log
+#   level:
+#    root: INFO
+#   pattern:
+#    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p ${PID:- } --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}'
+#  
