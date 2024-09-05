@@ -8,36 +8,29 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.MultipleDataSourceConnection.productrepo", entityManagerFactoryRef = "mySqlEntityManagerFactoryBeen", transactionManagerRef = "mySqlTransactionManager")
-public class MySqlConfig {
+@EnableJpaRepositories(basePackages = "com.MultipleDataSourceConnection.productrepo", entityManagerFactoryRef = "msSqlEntityManagerFactoryBeen", transactionManagerRef = "msSqlTransactionManager")
+public class MsSql {
 
-	// 1) configure the data source
-	// 2) create entity manager object
-	// 3) create transaction manager been
-	@ConfigurationProperties("spring.datasource.mysql")
+	// step 1: get the configuration data from yml
 	@Bean
-	public DataSourceProperties mySqlDataSourceProperties() {
+	@ConfigurationProperties("spring.datasource.msserver")
+	public DataSourceProperties msSqlDataSourceProperties() {
 		return new DataSourceProperties();
 	}
 
-	// we can set the datasource in two ways
-	// 1) my setup in the instance of driverManagerDataSource
-	// 2)
+	// step 2: set the configuration data in the data source
 	@Bean
-	// @Primary
-	public DataSource mySqlDataSource() {
-		// 1
-		DataSource dataSource = mySqlDataSourceProperties().initializeDataSourceBuilder().build();
+	public DataSource msSqlDataSource() {
 
-		// 2
+		DataSource dataSource = msSqlDataSourceProperties().initializeDataSourceBuilder().build();
+//or
+
 //		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 //		dataSource.setUsername(mySqlDataSourceProperties().getUsername());
 //		dataSource.setPassword(mySqlDataSourceProperties().getPassword());
@@ -47,8 +40,7 @@ public class MySqlConfig {
 		return dataSource;
 	}
 
-	// creating entity manager
-
+	//step 3: create entity manager factory instance
 	@Bean
 	// (name = "entityManagerFactory") // we need to give bean name as
 	// entitymanagerfactory bcoz spring will search in
@@ -56,17 +48,17 @@ public class MySqlConfig {
 	// =@EnableJpaRepositories(entityManagerFactoryRef =
 	// "mySqlEntityManagerFactoryBeen") give in above of the class
 
-	LocalContainerEntityManagerFactoryBean mySqlEntityManagerFactoryBeen(
+	LocalContainerEntityManagerFactoryBean msSqlEntityManagerFactoryBeen(
 			EntityManagerFactoryBuilder entityManagerFactoryBuilder,
-			@Qualifier("mySqlDataSource") DataSource dataSource) {
+			@Qualifier("msSqlDataSource") DataSource dataSource) {
 		return entityManagerFactoryBuilder.dataSource(dataSource)
 				.packages("com.MultipleDataSourceConnection.productEntity").build();
 	}
 
-	// creating transaction manager been
+	//step 4: create a transaction manager instance 
 	@Bean
-	PlatformTransactionManager mySqlTransactionManager(
-			@Qualifier("mySqlEntityManagerFactoryBeen") LocalContainerEntityManagerFactoryBean entityManagerFactoryBean) {
+	PlatformTransactionManager msSqlTransactionManager(
+			@Qualifier("msSqlEntityManagerFactoryBeen") LocalContainerEntityManagerFactoryBean entityManagerFactoryBean) {
 		return new JpaTransactionManager(entityManagerFactoryBean.getObject());
 	}
 }

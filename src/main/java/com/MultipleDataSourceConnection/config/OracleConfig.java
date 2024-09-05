@@ -10,36 +10,32 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@EnableTransactionManagement // need to give 
+@EnableTransactionManagement // need to give
 @Configuration
-@EnableJpaRepositories(
-		basePackages = "com.MultipleDataSourceConnection.orderrepo",
-		transactionManagerRef = "postgresTransactionManager")
-public class PostgresConfig {
+@EnableJpaRepositories(basePackages = "com.MultipleDataSourceConnection.orderrepo", transactionManagerRef = "oracleSqlDataSourceTransactionManager")
+public class OracleConfig {
+	// step 1: get the configuration data from yml
 
-	@ConfigurationProperties("spring.datasource.postgresql")
+	@ConfigurationProperties("spring.datasource.oracle")
 	@Bean
 
-	public DataSourceProperties postgreSqlDataSourceProperties() {
-		DataSourceProperties a = new DataSourceProperties();
-		System.err.println(a.toString());
-		return a;
+	public DataSourceProperties oracleSqlDataSourceProperties() {
+		return new DataSourceProperties();
+
 	}
 
-	// we can set the datasource in two ways
-	// 1) my setup in the instance of driverManagerDataSource
-	// 2)
+	// step 2: set the configuration data in the data source
+
 	@Bean
 	@Primary
-	public DataSource postgreSqlDataSource() {
+	public DataSource oracleSqlDataSource() {
 		// 1
-		DataSource dataSource = postgreSqlDataSourceProperties().initializeDataSourceBuilder().build();
+		DataSource dataSource = oracleSqlDataSourceProperties().initializeDataSourceBuilder().build();
 
 		// 2
 //		DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -50,19 +46,20 @@ public class PostgresConfig {
 
 		return dataSource;
 	}
+	// step 3: create entity manager factory instance
 
-	// create bean for entity manager
 	@Bean(name = "entityManagerFactory")
 	LocalContainerEntityManagerFactoryBean postgresEntityManagerFactory(
 			EntityManagerFactoryBuilder entityManagerFactoryBuiler,
-			@Qualifier("postgreSqlDataSource") DataSource dataSource) {
-		return entityManagerFactoryBuiler.dataSource(dataSource).packages("com.MultipleDataSourceConnection.orderentity")
-				.build();
+			@Qualifier("oracleSqlDataSource") DataSource dataSource) {
+		return entityManagerFactoryBuiler.dataSource(dataSource)
+				.packages("com.MultipleDataSourceConnection.orderentity").build();
 	}
-	// create transaction manager
+
+	// step 4: create a transaction manager instance
 	@Bean
-	PlatformTransactionManager postgresTransactionManager(@Qualifier("entityManagerFactory")
-			LocalContainerEntityManagerFactoryBean entityManagerFactoryBean) {
+	PlatformTransactionManager oracleSqlDataSourceTransactionManager(
+			@Qualifier("entityManagerFactory") LocalContainerEntityManagerFactoryBean entityManagerFactoryBean) {
 		return new JpaTransactionManager(entityManagerFactoryBean.getObject());
 	}
 }

@@ -1,45 +1,98 @@
+        
 #spring:
 #  datasource:
-#    url: jdbc:mysql://localhost:3306/product
-#    username: root
-#    password: root
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    mysql:
+#      url: jdbc:mysql://localhost:3306/product
+#      username: root
+#      password: root
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      hikari:
+#        maximum-pool-size: 10
+#    postgresql:
+#      url: jdbc:postgresql://localhost:5432/order
+#      username: killi
+#      password: post@123
+#      driver-class-name: org.postgresql.Driver
+#      hikari:
+#        maximum-pool-size: 10
+#        
 #  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    properties:
+#    open-in-view: false
+#    generate-ddl: true # need to give this 
+#    mysql:
+#      properties:
+#        hibernate:
+#          dialect: org.hibernate.dialect.MySQLDialect
 #      hibernate:
-#        dialect: org.hibernate.dialect.MySQLDialect
-        
+#        ddl-auto: update
+#    postgresql:
+#      properties:
+#        hibernate:
+#          dialect: org.hibernate.dialect.PostgreSQLDialect
+#      hibernate:
+#        ddl-auto: update
+
+
+#spring:
+#  datasource:
+#    msserver:
+#      url: jdbc:sqlserver://49.50.117.241:1433;databaseName=poc;encrypt=false;trustServerCertificate=true;
+#      username: appuser
+#      password: appuser@#321
+#      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+#    oracle:
+#      url: jdbc:oracle:thin:@49.50.117.241:1521:xe
+#      username: system
+#      password: OraXe@321
+#      driver-class-name: oracle.jdbc.OracleDriver
+#
+#  jpa:
+#    open-in-view: false
+#    msserver:
+#      properties:
+#        hibernate:
+#          dialect: org.hibernate.dialect.SQLServer2012Dialect
+#      hibernate:
+#        ddl-auto: update
+#      database-platform: org.hibernate.dialect.SQLServer2012Dialect # Add this
+#    oracle:
+#      properties:
+#        hibernate:
+#          dialect: org.hibernate.dialect.Oracle12cDialect
+#      hibernate:
+#        ddl-auto: update
+#      database-platform: org.hibernate.dialect.Oracle12cDialect # Add this
+
+      
 spring:
   datasource:
-    mysql:
-      url: jdbc:mysql://localhost:3306/product
-      username: root
-      password: root
-      driver-class-name: com.mysql.cj.jdbc.Driver
+    msserver:
+      url: jdbc:sqlserver://49.50.117.241:1433;databaseName=poc;encrypt=false;trustServerCertificate=true;
+      username: appuser
+      password: appuser@#321
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
       hikari:
         maximum-pool-size: 10
-    postgresql:
-      url: jdbc:postgresql://localhost:5432/order
-      username: killi
-      password: post@123
-      driver-class-name: org.postgresql.Driver
+    oracle: 
+      url: jdbc:oracle:thin:@49.50.117.241:1521:xe
+      username: system
+      password: OraXe@321
+      driver-class-name: oracle.jdbc.OracleDriver
       hikari:
         maximum-pool-size: 10
         
   jpa:
     open-in-view: false
     generate-ddl: true # need to give this 
-    mysql:
+    msserver:
       properties:
         hibernate:
-          dialect: org.hibernate.dialect.MySQLDialect
+          dialect: org.hibernate.dialect.SQLServer2012Dialect
       hibernate:
         ddl-auto: update
-    postgresql:
+    oracle:
       properties:
         hibernate:
-          dialect: org.hibernate.dialect.PostgreSQLDialect
+          dialect: org.hibernate.dialect.Oracle12cDialect
       hibernate:
         ddl-auto: update
